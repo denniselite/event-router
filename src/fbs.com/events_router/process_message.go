@@ -6,6 +6,7 @@ import (
     "fbs.com/toolkit/conn"
     . "fbs.com/toolkit/errors"
     "fbs.com/events_router/structs"
+    "encoding/json"
 )
 
 func (er *EventsRouter) ProcessMessage(ctx *iris.Context) {
@@ -27,8 +28,8 @@ func (er *EventsRouter) ProcessMessage(ctx *iris.Context) {
     }
 
     //Проверяем данные в запросе, должны представлять собой правильный JSON
-    inputData := ctx.ReadJSON(signature.Data)
-    if err := validator.Validate(inputData); err != nil {
+    var inputData interface{}
+    if err := json.Unmarshal([]byte(signature.Data), &inputData); err != nil {
         ctx.JSON(HttpApiError(err))
         return
     }

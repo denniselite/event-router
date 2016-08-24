@@ -38,24 +38,11 @@ func (er *EventsRouter) LogPayload (ctx *iris.Context) {
     ctx.Log("%s Request: %s\n%s Response: %s\n", uuid, ctx.Request.Body(), uuid, ctx.Response.Body())
 }
 
-func (er *EventsRouter) CheckRabbitConnection(ctx *iris.Context) {
-    if er.Rmq.Ping() != nil {
-        err := er.Rmq.Reconnect()
-        if err != nil {
-            ctx.JSON(HttpApiError(err))
-            return
-        }
-    }
-
-    ctx.Next()
-}
-
 func (er *EventsRouter) NewRouter() *iris.Framework {
     router := iris.New(config.Iris { DisableBanner: true })
 
     router.UseFunc((*er).LogPayload)
     router.Use(logger.New(iris.Logger))
-    router.UseFunc((*er).CheckRabbitConnection)
 
     router.Post("/process-message", er.ProcessMessage)
     router.Get("/ping", func (ctx *iris.Context) {
