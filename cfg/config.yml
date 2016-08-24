@@ -1,0 +1,21 @@
+listen: 3003
+
+pgsql:
+  host: 127.0.0.1
+  port: 5432
+  username: username
+  password: password
+  database: database
+
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  username: username
+  password: password
+  database: database
+
+rabbit:
+  host: 127.0.0.1
+  port: 5672
+  username: guest
+  password: guest
